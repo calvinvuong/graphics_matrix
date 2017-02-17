@@ -13,6 +13,11 @@ int main() {
   struct matrix *edges;
 
   edges = new_matrix(4, 4);
-
+  print_matrix(edges);
+  printf("\n");
+  
+  ident(edges);
+  print_matrix(edges);
+  
   free_matrix( edges );
 }  
