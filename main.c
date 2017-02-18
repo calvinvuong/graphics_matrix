@@ -18,6 +18,11 @@ int main() {
   
   ident(edges);
   print_matrix(edges);
+  printf("\n");
+
+  scalar_mult(4.25, edges);
+  print_matrix(edges);
+  printf("\n");
   
   free_matrix( edges );
 }  
