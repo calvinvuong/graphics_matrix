@@ -57,13 +57,30 @@ void scalar_mult(double x, struct matrix *m) {
 
 
 /*-------------- void matrix_mult() --------------
-Inputs:  struct matrix *a
-         struct matrix *b 
+Inputs:  struct matrix *a (always 4 x 4)
+         struct matrix *b (always 4 x n)
 Returns: 
 
 a*b -> b
 */
 void matrix_mult(struct matrix *a, struct matrix *b) {
+  struct matrix *tmp_matrix = new_matrix(4, b->cols);
+  int i, j, k;
+  
+  for ( i = 0; i < b->cols; i++ ) { // loop through cols of edge matrix 
+    for ( j = 0; j < 4; j++ ) { // loop through rows of transformation matrix
+      double product = 0.0;
+      for ( k = 0; k < 4; k++ ) 
+	product += (a->m[j][k] * b->m[k][i]);
+      tmp_matrix->m[j][i] = product;
+    }
+  }
+
+  // set matrix b to the tmp_matrix 
+  copy_matrix(tmp_matrix, b);
+
+  // free tmp_matrix
+  free_matrix(tmp_matrix);
 }
 
 
