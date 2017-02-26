@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <time.h>
 
 #include "ml6.h"
 #include "display.h"
@@ -9,15 +8,15 @@
 #include "matrix.h"
 
 int main() {
-  srand(time(NULL));
+  int i;
   
   screen s;
   color c;
 
   clear_screen(s);
   
-  c.red = 255;
-  c.blue = 255;
+  c.red = 200;
+  c.blue = 150;
   c.green = 0;
   
   struct matrix *edges;
@@ -33,45 +32,68 @@ int main() {
   print_matrix(identity);
   printf("\n");
 
-  // set matrix to random values
-  int i;
-  for ( i = 0; i < 4; i++ )
-    add_edge(edges, rand() % 13, rand() % 13, rand() % 13,
-    	      rand() % 13, rand() % 13, rand() % 13); 
+  // set edge matrix 
+  add_edge(edges, 0, 250, 0, 250, 500, 0);
+  add_edge(edges, 250, 500, 0, 500, 250, 0);
+  add_edge(edges, 500, 250, 0, 250, 0, 0);
+  add_edge(edges, 250, 0, 0, 0, 250, 0);
 
-  printf("Edge Matrix of Random Values:\n");
+  printf("Edge Matrix:\n");
   print_matrix(edges);
   printf("\n");
 
+  // identity multiply
+  printf("Identity Matrix * Edge Matrix:\n");
+  matrix_mult(identity, edges);
+  print_matrix(edges);
+  // draw edge matrix
+  draw_lines(edges, s, c);
+  printf("Edge matrix drawn...\n\n");
 
-  // set transformation matrix to random values
-  for ( i = 0; i < 4; i++ )
-    add_point(transform, rand() % 5, rand() % 5, rand() % 5);
-
-  printf("4x4 Transformation Matrix of Semi-Random Values:\n");
+  // scalar multiply 
+  printf("Scalar Multiplication: 0.75 * Edge Matrix:\n");
+  scalar_mult(0.95, edges);
+  print_matrix(edges);
+  // draw edge matrix
+  draw_lines(edges, s, c);
+  printf("New edge matrix drawn...\n\n");
+  printf("Doing this again a few times...\n");
+  for ( i = 0; i < 20; i++ ) {
+    scalar_mult(0.95, edges);
+    c.red -= 9;
+    draw_lines(edges, s, c);
+  }
+  printf("New edge matrices drawn...\n\n");
+  
+  // set transformation matrix 
+  ident(transform);
+  transform->m[0][0] = 1.05;  
+  transform->m[1][1] = 1.1;
+    
+  printf("4x4 Transformation Matrix:\n");
   print_matrix(transform);
   printf("\n");
 
+  c.green = 100;
   
+  // matrix multiply
   printf("Transformation Matrix * Edge Matrix:\n");
   matrix_mult(transform, edges);
   print_matrix(edges);
-  printf("\n");
-
-  printf("Identity Matrix * (Transformed) Edge Matrix:\n");
-  matrix_mult(identity, edges);
-  print_matrix(edges);
-  printf("\n");
-
-  
-  printf("Scalar Multiplication: 4.0 * (Transformed) Edge Matrix:\n");
-  scalar_mult(4.0, edges);
-  print_matrix(edges);
-  printf("\n");
-
-  // draw
+  // draw edge matrix
   draw_lines(edges, s, c);
+  printf("New edge matrix drawn...\n\n");
+  printf("Doing this again a few times...\n");
+  for ( i = 0; i < 10; i++ ) {
+    matrix_mult(transform, edges);
+    c.green += 15;
+    draw_lines(edges, s, c);
+  }
+  printf("New edge matrices drawn...\n\n");
+  
+  printf("Displaying image...\n");
   display(s);
+  save_extension(s, "matrix.png");
   
   free_matrix( edges );
   free_matrix(identity);
