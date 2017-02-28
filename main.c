@@ -38,7 +38,7 @@ int main() {
   add_edge(edges, 500, 250, 0, 250, 0, 0);
   add_edge(edges, 250, 0, 0, 0, 250, 0);
 
-  printf("Edge Matrix:\n");
+  printf("Edge Matrix: (testing add_edge()\n");
   print_matrix(edges);
   printf("\n");
 
